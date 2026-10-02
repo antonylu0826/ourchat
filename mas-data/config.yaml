@@ -1,0 +1,130 @@
+http:
+  listeners:
+  - name: web
+    resources:
+    - name: discovery
+    - name: human
+    - name: oauth
+    - name: compat
+    - name: graphql
+    - name: assets
+    binds:
+    - address: '[::]:8080'
+    proxy_protocol: false
+  - name: internal
+    resources:
+    - name: health
+    binds:
+    - host: localhost
+      port: 8081
+    proxy_protocol: false
+  trusted_proxies:
+  - 192.168.0.0/16
+  - 172.16.0.0/12
+  - 10.0.0.0/10
+  - 127.0.0.1/8
+  - fd00::/8
+  - ::1/128
+  public_base: http://localhost:8081/
+  issuer: http://localhost:8081/
+database:
+  uri: postgresql://synapse:synapse@172.28.0.10:5432/mas
+  max_connections: 10
+  min_connections: 0
+  connect_timeout: 30
+  idle_timeout: 600
+  max_lifetime: 1800
+email:
+  from: '"Authentication Service" <root@localhost>'
+  reply_to: '"Authentication Service" <root@localhost>'
+  transport: blackhole
+secrets:
+  encryption: fffb68b0a677b0d6b34a0ed70907248f1f07f3a663cf04d1486c32e3b6fbac48
+  keys:
+  - key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIEpAIBAAKCAQEAtgbQP+yZAOvLMH3gwp7xfY0A2Ks1ZsWVePge7RXA5VrNCQLW
+      TqNAh1usm3DjDc+7ltRpm4py+YRyNZeetBuVRKRqds2SoNPJINJuBtX2SMl2t0b3
+      c/lQySuDhtddEaCcvvXE/4EikaK9RKjgwB3bbIyfQL7tBvT29qOvEMaLsuXcJvOl
+      j3NV7G2AevWyU9fmTLEvD31s7QjUMfopTr/ADXQ0U0dEWFleM3Tl+BWxSEFdYYLN
+      st4V1Tw0l64cf8LBKvSksRCIGDGEwgpqXrep4gaAX/cBe5mJIwk7mv7926UUYt7t
+      cLFdhEUbykIdOgkCushOxeJxS+pP8RdiRV60/wIDAQABAoIBAFRLx3kzCpBAojJs
+      uP+oN9Ga0P+GGg7kBZql3TySTGhqqnU32SNFuwZ0T/UUTDIDN65b5CRh82jWC0YC
+      Vz61X2UQdzVZckQEkCohCU8lGw8OLWom9UXB+cWP3zM83R7isHRGwNpKZUXohZoc
+      UyjlKs6UONP1FzOXkh8aImK0b9GClTEi4tLRTbPlX39Wi10VQMdabYno0fgNQkIk
+      swQnQ9XQdm8Q6ehl7bcKggMofTbjFqPyWnyUr6M0KRC3twU58VjaO0lDcYNnqG4A
+      duG16xiKrIQ7LX8U3fnZIglIsy8i3aGW6wUzScXPJIm7y25yCOecSuJg6iYN88mo
+      V/tpyVECgYEAy7Pz/aw1s4IhsyunlzZwSNyjnokdvL41CWO09B1ZWkQ3DMdYd31E
+      k6zFshKoeE/jw6nnKXOYSS64NW4FFJ8TD0KJ/ujPGBhRxkAw1qKx2wH77ZP+fW9u
+      cFwRdJlumR+0TAl04Uvan8+z6XJ4rBFDGk151t6DPAcJWUrQ6L8/ah0CgYEA5MI4
+      BLDzXnQN/vf4Mt7p4plXF7vhxc1+qhD/2JZQJXgXppSgVJALpY5buMhoAbFkQExb
+      ojtVA6FWmQIk/h50oPa+HlJURkpCmldUkVZkVwchdPaWKrgv6aMGlw74J+/DqolR
+      6xyajt2JTHM25pJIGRl4Wh9y8P0Ub0oDUaD20MsCgYBWo2kpAW+ts7FlpTGYjNzh
+      AIbOzP7K4hNotPGnyjvQuqa3Vqn32F2seZV0EZ953HDBLahV5wZkSeyrPOoIRUgz
+      +1b6BkbetqlBKtga0gPXZFakS4e4Dgbo3x/FeeSiV+u1U2hU0pBf3FVm+vr8JDNo
+      In+pteYXR97gDYQhGgZ8uQKBgQC0/aVssMQc2x2nuXG6bfwGuOPbd19uLOQmkkSa
+      jHLk8ltkBPvFbCKK3lNbo9QGYt+6r69gcCkXMjNd5AB4vofwQsixHNposqB3lNjo
+      FL5WzOF/tQmiyw+9fqrcIY/dqSnaZ8NUjdELb+QNhKrPSrWYhjpes7sxSEs+sgRm
+      NUCSeQKBgQCxd2HFDXrcfY8myhUIuAhtDzrtnzBag/nKTHEEfCCA1Ghdf6sfl4UD
+      QoMyHvbwfMQmzNV8gdAFih5e//0lux8rnRJM0XhKflQpCFGpz92Zm8/oQZyHiTnb
+      PPLsEAPDksE/pY9XOCYB+wAAvtaeT26Nf6bJFq8IknJFgO0EPB93RA==
+      -----END RSA PRIVATE KEY-----
+  - key: |
+      -----BEGIN EC PRIVATE KEY-----
+      MHcCAQEEIF3Xsy8606BPqIx/bU2QC92LIVc1OhzGGHnqgCeKRIlloAoGCCqGSM49
+      AwEHoUQDQgAEtgGb3MZ0InsEISg1dIBQKSUyGjmvy3SKIJMZo+u9sb8YEclQUmJG
+      J/1UvBFIZBNGh+po5mtlRuTsXqJYl7eSzw==
+      -----END EC PRIVATE KEY-----
+  - key: |
+      -----BEGIN EC PRIVATE KEY-----
+      MIGkAgEBBDBW+c9xfSgOA2RRmoEt4v3KWbr8nq3vMaxY4iqWTuqYRxnQafocTGUi
+      EVfeXskQ48egBwYFK4EEACKhZANiAATT1W2u3T+9z9tYgUhdtBwiXkLinket1j6W
+      2BMaZ2Q00oPx8InMymC2+zT3IGQg6RGqzIVUPf3lZV+7PpK2aYabpsb6+o06xKjZ
+      8QQ86rKXNl9hDUuaCutlioJySLH4Yrg=
+      -----END EC PRIVATE KEY-----
+  - key: |
+      -----BEGIN EC PRIVATE KEY-----
+      MHQCAQEEIBNk3sSa0C+a62Kcqr6VptabvmtZCDsosYAlZzCSx/LboAcGBSuBBAAK
+      oUQDQgAE1O8Gg0tfw30F935UVyTc12etA1l7w8Su0bKnEkn7MeHxGmT48CIeEMpD
+      dLvdNzjnLsbS4L7AaydESLUfvQ3oGA==
+      -----END EC PRIVATE KEY-----
+passwords:
+  enabled: true
+  schemes:
+  - version: 1
+    algorithm: argon2id
+  minimum_complexity: 3
+matrix:
+  kind: synapse
+  homeserver: ourchat.local
+  secret: ms7EeWLa4gGv4Voi1Fql9ehlHGOueOZ8
+  endpoint: http://172.28.0.11:8008/
+upstream_oauth2:
+  providers:
+    - id: "01HZXKC0000000000000000001"
+      human_name: "Keycloak"
+      issuer: "http://localhost:8082/realms/ourchat"
+      discovery_mode: disabled
+      authorization_endpoint: "http://localhost:8082/realms/ourchat/protocol/openid-connect/auth"
+      token_endpoint: "http://172.28.0.12:8080/realms/ourchat/protocol/openid-connect/token"
+      jwks_uri: "http://172.28.0.12:8080/realms/ourchat/protocol/openid-connect/certs"
+      userinfo_endpoint: "http://172.28.0.12:8080/realms/ourchat/protocol/openid-connect/userinfo"
+      client_id: "mas"
+      client_secret: "FzLRpN4BJHGKhc4MC1rH1Er9nCIFhhTD99XlEdHn8qPPAdAimTmpH7lglsIdLALCehAKaqia1irOCYOgugudQi"
+      token_endpoint_auth_method: client_secret_basic
+      scope: "openid profile email"
+      claims_imports:
+        localpart:
+          action: require
+          template: "{{ user.preferred_username }}"
+        displayname:
+          action: suggest
+          template: "{{ user.name }}"
+        email:
+          action: suggest
+          template: "{{ user.email }}"
+          set_email_verified: true
+policy:
+  data:
+    client_registration:
+      allow_insecure_uris: true

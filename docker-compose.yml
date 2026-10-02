@@ -1,0 +1,97 @@
+networks:
+  ourchat:
+    ipam:
+      config:
+        - subnet: 172.28.0.0/24
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: ourchat-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: synapse
+      POSTGRES_PASSWORD: synapse
+      POSTGRES_DB: synapse
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    volumes:
+      - ./pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U synapse"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      ourchat:
+        ipv4_address: 172.28.0.10
+
+  synapse:
+    image: matrixdotorg/synapse:latest
+    container_name: ourchat-synapse
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SYNAPSE_SERVER_NAME: ourchat.local
+      SYNAPSE_REPORT_STATS: "no"
+    volumes:
+      - ./synapse-data:/data
+    ports:
+      - "8008:8008"
+    networks:
+      ourchat:
+        ipv4_address: 172.28.0.11
+
+  element-web:
+    image: vectorim/element-web:latest
+    container_name: ourchat-element
+    restart: unless-stopped
+    depends_on:
+      - synapse
+    volumes:
+      - ./element-config/config.json:/app/config.json:ro
+    ports:
+      - "8080:80"
+    networks:
+      ourchat:
+        ipv4_address: 172.28.0.14
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: ourchat-keycloak
+    restart: unless-stopped
+    command: start-dev
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: "8082"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+    volumes:
+      - ./keycloak-data:/opt/keycloak/data
+    ports:
+      - "8082:8080"
+    networks:
+      ourchat:
+        ipv4_address: 172.28.0.12
+
+  mas:
+    image: ghcr.io/element-hq/matrix-authentication-service:latest
+    container_name: ourchat-mas
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      synapse:
+        condition: service_started
+    command: ["server", "-c", "/data/config.yaml"]
+    volumes:
+      - ./mas-data/config.yaml:/data/config.yaml:ro
+    ports:
+      - "8081:8080"
+    networks:
+      ourchat:
+        ipv4_address: 172.28.0.13

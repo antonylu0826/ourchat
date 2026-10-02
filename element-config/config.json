@@ -1,0 +1,13 @@
+{
+  "default_server_config": {
+    "m.homeserver": {
+      "base_url": "http://localhost:8008",
+      "server_name": "ourchat.local"
+    }
+  },
+  "brand": "OurChat",
+  "disable_guests": true,
+  "default_country_code": "TW",
+  "show_labs_settings": true,
+  "features": {}
+}

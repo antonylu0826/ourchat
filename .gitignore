@@ -1,0 +1,14 @@
+# Database and runtime data directories
+pg-data/
+keycloak-data/
+synapse-data/media_store/
+synapse-data/homeserver.pid
+
+# Log files
+*.log
+
+# OS & Editor generated files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
